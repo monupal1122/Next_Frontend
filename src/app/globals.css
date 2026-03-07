@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+@theme {
+  /* Font families */
+  --font-sans: 'Outfit', sans-serif;
+  --font-serif: 'Playfair Display', serif;
+  --font-article: 'Inter', sans-serif;
+  --font-accent: 'Teko', sans-serif;
+
+  /* Core colors - Premium News Palette */
+  --color-background: hsl(0 0% 100%);
+  --color-foreground: hsl(222 47% 11%);
+
+  --color-card: hsl(0 0% 100%);
+  --color-card-foreground: hsl(222 47% 11%);
+
+  --color-popover: hsl(0 0% 100%);
+  --color-popover-foreground: hsl(222 47% 11%);
+
+  /* Premium Navy Primary */
+  --color-primary: hsl(222 47% 11%);
+  --color-primary-foreground: hsl(0 0% 100%);
+
+  /* Gold Accent */
+  --color-secondary: hsl(45 86% 83%);
+  --color-secondary-foreground: hsl(222 47% 11%);
+
+  --color-muted: hsl(210 40% 96.1%);
+  --color-muted-foreground: hsl(215.4 16.3% 46.9%);
+
+  --color-accent: #e11d48;
+  /* Red used for breaking news and icons */
+  --color-accent-foreground: #ffffff;
+
+  --color-destructive: hsl(0 84.2% 60.2%);
+  --color-destructive-foreground: hsl(210 40% 98%);
+
+  --color-border: hsl(214.3 31.8% 91.4%);
+  --color-input: hsl(214.3 31.8% 91.4%);
+  --color-ring: #e11d48;
+
+  --radius: 0.5rem;
+
+  --shadow-premium: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+@layer base {
+  body {
+    background-color: rgb(245, 243, 243);
+    color: rgb(22, 22, 29);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+}
+
+@layer components {
+  .news-container {
+    @apply container mx-auto px-4 max-w-7xl;
+  }
+
+  /* Industry Standard Section Header */
+  .section-header {
+    @apply flex items-center justify-between mb-8 sm:mb-10 pb-4 border-b-4 border-zinc-900 relative gap-3;
+  }
+
+  .section-header h2 {
+    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black uppercase tracking-tighter text-zinc-900 leading-none truncate;
+    font-family: var(--font-sans);
+  }
+
+  .section-header::after {
+    content: '';
+    @apply absolute bottom-[-4px] left-0 w-24 sm:w-36 md:w-48 h-1 bg-accent;
+  }
+
+  .view-all-btn {
+    @apply bg-accent text-white text-[9px] sm:text-[10px] md:text-[10px] px-3 py-2 sm:px-4 sm:py-2.5 md:px-5 md:py-3 font-black uppercase tracking-widest shadow-lg hover:shadow-xl hover:bg-zinc-900 transition-all duration-200 rounded-lg whitespace-nowrap active:scale-95 flex items-center gap-1.5;
+  }
+
+  /* News Card */
+  .news-card {
+    @apply bg-white rounded-[0.75rem] overflow-hidden transition-all duration-300 ease-out hover:shadow-premium hover:-translate-y-1 h-full;
+  }
+
+  /* Ticker Logic */
+  @keyframes infinite-scroll {
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-infinite-scroll {
+    animation: infinite-scroll 100s linear infinite;
+    display: flex;
+    width: max-content;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Custom Selection */
+::selection {
+  @apply bg-accent/10 text-accent;
+}
+
+/* Typography Helpers */
+.prose {
+  font-family: var(--font-article);
+}
+
+.font-teko {
+  font-family: var(--font-accent);
+}
