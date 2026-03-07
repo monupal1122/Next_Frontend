@@ -94,7 +94,6 @@
     @apply bg-white rounded-[0.75rem] overflow-hidden transition-all duration-300 ease-out hover:shadow-premium hover:-translate-y-1 h-full;
   }
 
-  /* Ticker Logic */
   @keyframes infinite-scroll {
     from {
       transform: translateX(0);
@@ -103,6 +102,20 @@
     to {
       transform: translateX(-50%);
     }
+  }
+
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .animate-shimmer {
+    animation: shimmer 1.5s infinite;
   }
 
   .animate-infinite-scroll {
