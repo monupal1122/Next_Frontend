@@ -1,201 +1,160 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
-import { Clock, Eye, ArrowRight, Calendar } from "lucide-react";
-import { format, isValid, parseISO } from "date-fns";
-import { CategoryBadge } from "./CategoryBadge";
-import { cn } from "@/lib/utils";
-
-// Helper to safely format dates
-function safeFormatDate(dateStr: any, formatStr: string = "MMM d, yyyy") {
-    if (!dateStr) return "";
-    try {
-        const date = typeof dateStr === 'string' ? parseISO(dateStr) : new Date(dateStr);
-        if (isValid(date)) {
-            return format(date, formatStr);
-        }
-        return "";
-    } catch (e) {
-        return "";
-    }
-}
-
-export function calculateReadingTime(content: string | undefined) {
-    const wordsPerMinute = 200;
-    if (!content) return 1;
-    const text = content.replace(/<[^>]*>/g, "");
-    const wordCount = text.trim().split(/\s+/).length;
-    return Math.max(1, Math.ceil(wordCount / wordsPerMinute));
-}
+import Link from "next/link";
+import { Clock, Eye, LucideIcon, Share2, Bookmark } from "lucide-react";
+import { cn, toAbsoluteUrl, safeFormatDate, calculateReadingTime } from "@/lib/utils";
 
 interface NewsCardProps {
     article: any;
     variant?: "default" | "featured" | "horizontal" | "compact";
 }
 
-function toAbsoluteUrl(url: string | undefined): string {
-    const SITE_DOMAIN = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:8081";
-    const IMAGE_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
-
-    if (!url) return "https://images.unsplash.com/photo-1504711432869-efd597cdd04b?q=80&w=1000&auto=format&fit=crop";
-    if (url.startsWith("http://") || url.startsWith("https://")) return url;
-
-    const cleanPath = url.replace(/^public[\\/]/, "").replace(/\\/g, "/");
-    const finalPath = cleanPath.startsWith("/") ? cleanPath : `/${cleanPath}`;
-
-    return `${IMAGE_BASE_URL}${finalPath}`;
-}
-
 export function NewsCard({ article, variant = "default" }: NewsCardProps) {
-    if (!article) return <div className="animate-pulse bg-zinc-100 rounded-2xl h-32 w-full" />;
+    if (!article) return (
+        <div className="animate-pulse bg-zinc-100 rounded-2xl h-48 w-full flex items-center justify-center">
+            <div className="w-10 h-10 border-4 border-zinc-200 border-t-red-600 rounded-full animate-spin" />
+        </div>
+    );
 
     const readingTime = calculateReadingTime(article.content);
     const categorySlug = typeof article.category === "object" ? (article.category.slug || "uncategorized") : (article.category || "uncategorized");
     const subcategorySlug = article.subcategories?.[0]?.slug || "general";
-    const slugId = article.slug ? `${article.slug}-${article.publicId || article._id}` : (article.publicId || article._id);
+
+    // Improved slug handling
+    const slugId = article.slug && article.publicId
+        ? `${article.slug}-${article.publicId}`
+        : (article.publicId || article._id);
+
     const articleLink = `/${categorySlug}/${subcategorySlug}/${slugId}`;
     const imageSrc = toAbsoluteUrl(article.featuredImage || article.image);
     const excerpt = article.summary || article.description || "";
     const totalview = article.viewCount || 0;
-    const categoryName = typeof article.category === "object" ? article.category.name : (article.category || "General");
 
-    const formattedDate = safeFormatDate(article.publishedAt || article.createdAt);
-
-    // ─── Featured Variant ───────────────────────────────────────────────────────
     if (variant === "featured") {
         return (
-            <Link
-                href={articleLink}
-                className="group block h-full bg-white hover:shadow-xl transition-all duration-300 border border-zinc-100 rounded-2xl overflow-hidden"
-            >
-                <div className="flex flex-col lg:flex-row h-full">
-                    <div className="w-full aspect-[16/9] lg:w-[58%] lg:aspect-auto lg:min-h-[320px] relative overflow-hidden rounded-xl m-2 lg:rounded-xl lg:m-3 flex-shrink-0">
-                        <Image
-                            src={imageSrc}
-                            alt={article.title || "News"}
-                            fill
-                            className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
-                        <div className="absolute top-3 left-3 lg:hidden">
-                            <CategoryBadge category={article.category} />
-                        </div>
-                    </div>
-
-                    <div className="flex flex-col justify-center p-4 sm:p-5 lg:p-6 flex-1 min-w-0">
-                        <div className="hidden lg:flex items-center gap-3 mb-3">
-                            <CategoryBadge category={article.category} />
-                            {formattedDate && (
-                                <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest">
-                                    {formattedDate}
-                                </span>
-                            )}
-                        </div>
-
-                        <h2 className="font-serif font-bold text-zinc-900 leading-snug group-hover:text-red-700 transition-colors line-clamp-3 text-xl sm:text-2xl lg:text-3xl xl:text-4xl mb-2 lg:mb-4 uppercase tracking-tighter">
-                            {article.title}
-                        </h2>
-
-                        <p className="text-zinc-500 leading-relaxed line-clamp-2 lg:line-clamp-4 text-sm sm:text-base lg:text-[15px] mb-3 lg:mb-5">
-                            {excerpt}
-                        </p>
-
-                        <div className="mt-auto flex items-center gap-2 text-sm font-bold text-zinc-900 uppercase tracking-widest group-hover:gap-3 transition-all">
-                            Read Full Story
-                            <ArrowRight className="w-4 h-4 text-red-600 flex-shrink-0" />
-                        </div>
-                    </div>
-                </div>
-            </Link>
-        );
-    }
-
-    // ─── Horizontal/Compact Variant ─────────────────────────────────────────────────────
-    if (variant === "horizontal" || variant === "compact") {
-        return (
-            <Link
-                href={articleLink}
-                className="group flex gap-3 p-3 hover:bg-zinc-50 hover:shadow-sm transition-all duration-300 bg-white rounded-2xl border border-zinc-100 h-full"
-            >
-                <div className="flex-shrink-0 overflow-hidden rounded-xl bg-zinc-100 shadow-sm w-24 h-20 sm:w-32 sm:h-24 md:w-36 md:h-26 relative">
-                    <Image
-                        src={imageSrc}
-                        alt={article.title || "News"}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                </div>
-
-                <div className="flex flex-col justify-center min-w-0 flex-1 gap-1">
-                    <div className="flex items-center gap-1.5">
-                        <span className="w-1 h-3 bg-red-600 rounded-full flex-shrink-0" />
-                        <span className="text-[11px] sm:text-xs font-black uppercase text-zinc-400 tracking-widest truncate">
-                            {categoryName}
-                        </span>
-                    </div>
-
-                    <h4 className="font-black text-zinc-900 leading-snug group-hover:text-red-600 transition-colors tracking-tight line-clamp-2 text-sm sm:text-base md:text-[15px] uppercase">
-                        {article.title}
-                    </h4>
-
-                    <div className="flex items-center gap-3 text-[11px] sm:text-xs font-semibold text-zinc-400 uppercase tracking-wide mt-0.5">
-                        {formattedDate && (
-                            <span className="flex items-center gap-1">
-                                <Calendar className="w-3.5 h-3.5 text-red-500 flex-shrink-0" />
-                                {safeFormatDate(article.publishedAt || article.createdAt, "MMM d")}
-                            </span>
-                        )}
-                    </div>
-                </div>
-            </Link>
-        );
-    }
-
-    // ─── Default Variant ────────────────────────────────────────────────────────
-    return (
-        <div className="group relative bg-white overflow-hidden flex flex-col h-full hover:shadow-lg transition-all duration-300 border border-zinc-100 rounded-2xl">
-            <Link
-                href={articleLink}
-                className="relative overflow-hidden block rounded-xl m-2 mb-0 aspect-video lg:aspect-[16/10]"
-            >
+            <Link href={articleLink} className="group relative block h-full w-full overflow-hidden">
                 <Image
                     src={imageSrc}
-                    alt={article.title || "News"}
+                    alt={article.title}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    priority
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+                <div className="absolute bottom-0 left-0 p-6 md:p-10 w-full">
+                    <div className="flex items-center gap-3 mb-4">
+                        <span className="bg-red-600 text-white px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] rounded-sm">
+                            {typeof article.category === 'object' ? article.category.name : "Featured"}
+                        </span>
+                        <span className="text-white/60 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5">
+                            <Clock className="w-3 h-3" /> {safeFormatDate(article.publishedAt || article.createdAt)}
+                        </span>
+                    </div>
+                    <h2 className="text-2xl md:text-5xl font-black text-white leading-[1.1] mb-4 group-hover:text-red-500 transition-colors uppercase tracking-tight">
+                        {article.title}
+                    </h2>
+                    <p className="text-white/70 text-sm md:text-lg line-clamp-2 max-w-3xl font-medium leading-relaxed">
+                        {excerpt}
+                    </p>
+                </div>
+            </Link>
+        );
+    }
+
+    if (variant === "horizontal" || variant === "compact") {
+        return (
+            <Link href={articleLink} className="flex gap-4 p-3 group transition-all duration-300 rounded-xl">
+                <div className="relative w-24 h-20 sm:w-28 sm:h-24 flex-shrink-0 overflow-hidden rounded-lg bg-zinc-100">
+                    <Image
+                        src={imageSrc}
+                        alt={article.title}
+                        fill
+                        className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                </div>
+                <div className="flex flex-col justify-center min-w-0 flex-1">
+                    <span className="text-red-600 text-[10px] font-black uppercase tracking-widest mb-1 block">
+                        {typeof article.category === 'object' ? article.category.name : "Intelligence"}
+                    </span>
+                    <h3 className="text-sm sm:text-[15px] font-black text-zinc-900 leading-tight mb-2 line-clamp-2 group-hover:text-red-600 transition-colors uppercase tracking-tight">
+                        {article.title}
+                    </h3>
+                    <div className="flex items-center gap-3 text-zinc-400 text-[9px] font-black uppercase tracking-widest">
+                        <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {safeFormatDate(article.publishedAt || article.createdAt, "MMM d")}</span>
+                        <span className="flex items-center gap-1"><Eye className="w-3 h-3" /> {totalview}</span>
+                    </div>
+                </div>
+            </Link>
+        );
+    }
+
+    // Default Vertical Card
+    return (
+        <div className="news-card group flex flex-col h-full bg-white border border-zinc-100 shadow-sm hover:shadow-xl hover:border-zinc-200 transition-all">
+            <Link href={articleLink} className="relative aspect-video overflow-hidden block">
+                <Image
+                    src={imageSrc}
+                    alt={article.title}
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
+                <div className="absolute top-4 left-4">
+                    <span className="bg-zinc-900/90 text-white px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.2em] backdrop-blur-sm border border-white/10">
+                        {typeof article.category === 'object' ? article.category.name : "Report"}
+                    </span>
+                </div>
             </Link>
 
-            <div className="flex flex-col flex-1 p-3 pt-2 gap-2">
-                <Link href={articleLink} className="block">
-                    <h3 className="font-bold leading-snug text-zinc-800 group-hover:text-red-700 transition-colors line-clamp-2 text-base sm:text-lg uppercase tracking-tight">
+            <div className="p-5 flex flex-col flex-1">
+                <div className="flex items-center gap-3 mb-4 text-[10px] font-black uppercase tracking-widest text-zinc-400">
+                    <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5 text-red-600" /> {safeFormatDate(article.publishedAt || article.createdAt, "MMM d, yyyy")}</span>
+                    <span className="w-1 h-1 bg-zinc-200 rounded-full" />
+                    <span className="flex items-center gap-1.5"><ActivityIcon className="w-3.5 h-3.5" /> {readingTime}m Read</span>
+                </div>
+
+                <Link href={articleLink} className="block group/title">
+                    <h3 className="text-xl font-black text-zinc-900 leading-[1.2] mb-3 group-hover:text-red-600 transition-colors uppercase tracking-tight line-clamp-3">
                         {article.title}
                     </h3>
                 </Link>
 
-                {excerpt && (
-                    <p className="text-zinc-500 text-sm leading-relaxed line-clamp-2 font-medium">
-                        {excerpt}
-                    </p>
-                )}
+                <p className="text-zinc-500 text-sm line-clamp-3 mb-6 font-medium leading-relaxed">
+                    {excerpt}
+                </p>
 
-                <div className="mt-auto flex items-center flex-wrap gap-x-3 gap-y-1 text-zinc-400 font-medium pt-2 border-t border-zinc-100">
-                    {formattedDate && (
-                        <span className="flex items-center gap-1 text-[10px] sm:text-xs font-bold uppercase tracking-widest">
-                            <Calendar className="w-3.5 h-3.5 text-red-500 flex-shrink-0" />
-                            {formattedDate}
-                        </span>
-                    )}
-                    <span className="flex items-center gap-1 text-[10px] sm:text-xs font-bold uppercase tracking-widest">
-                        <Eye className="w-3.5 h-3.5 flex-shrink-0" />
-                        {totalview} views
-                    </span>
-                    <span className="flex items-center gap-1 text-[10px] sm:text-xs font-bold uppercase tracking-widest">
-                        <Clock className="w-3.5 h-3.5 flex-shrink-0" />
-                        {readingTime} min
-                    </span>
+                <div className="mt-auto pt-4 border-t border-zinc-50 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center group-hover:bg-red-50 transition-colors">
+                            <Eye className="w-4 h-4 text-zinc-400 group-hover:text-red-500" />
+                        </div>
+                        <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">{totalview} Intel Points</span>
+                    </div>
+                    <Link
+                        href={articleLink}
+                        className="p-2 text-zinc-400 hover:text-red-600 transition-colors"
+                    >
+                        <Share2 className="w-4 h-4" />
+                    </Link>
                 </div>
             </div>
         </div>
+    );
+}
+
+function ActivityIcon({ className }: { className?: string }) {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className={className}
+        >
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+        </svg>
     );
 }
