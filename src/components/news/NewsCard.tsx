@@ -49,7 +49,7 @@ export function NewsCard({ article, variant = "default" }: NewsCardProps) {
                 </div>
 
                 {/* Content Section (Matches Right Column of Screenshot) */}
-                <div className="w-full md:w-[42%] flex flex-col justify-center p-6 md:p-10 py-8">
+                <div className="w-full md:w-[42%] flex flex-col justify-center p-6 md:p-10 p-8">
                     <div className="flex items-center gap-3 mb-6">
                         <span className="bg-red-600 text-white px-2.5 py-1 text-[9px] font-black uppercase tracking-widest rounded-sm shadow-sm">
                             {typeof article.category === 'object' ? article.category.name : "National"}

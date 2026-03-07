@@ -6,16 +6,22 @@ import { getHeadlines } from '@/lib/api';
 import { NewsCard } from '@/components/news/NewsCard';
 import { NewsCardSkeleton } from '@/components/news/NewsCardSkeleton';
 
-export function TrendingSidebar() {
-    const [trending, setTrending] = useState<any[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+interface TrendingSidebarProps {
+    initialArticles?: any[];
+}
+
+export function TrendingSidebar({ initialArticles = [] }: TrendingSidebarProps) {
+    const [trending, setTrending] = useState<any[]>(initialArticles);
+    const [isLoading, setIsLoading] = useState(initialArticles.length === 0);
 
     useEffect(() => {
-        getHeadlines().then(data => {
-            setTrending(data.slice(0, 5)); // Matches the 5 slots in the screenshot
-            setIsLoading(false);
-        }).catch(() => setIsLoading(false));
-    }, []);
+        if (initialArticles.length === 0) {
+            getHeadlines().then(data => {
+                setTrending(data.slice(0, 5));
+                setIsLoading(false);
+            }).catch(() => setIsLoading(false));
+        }
+    }, [initialArticles]);
 
     return (
         <aside className="bg-white border border-zinc-100 shadow-sm overflow-hidden rounded-2xl">

@@ -46,16 +46,29 @@ export async function getSearchArticles(query: string) {
 }
 
 export async function getCategories() {
-    const response = await fetch(`${API_BASE_URL}/categories/full`);
-    if (!response.ok) return [];
-    return response.json();
+    try {
+        const response = await fetch(`${API_BASE_URL}/categories/full`);
+        if (!response.ok) return [];
+        const data = await response.json();
+        // Handle array wrap
+        return Array.isArray(data) ? data : (data.categories || []);
+    } catch (error) {
+        console.error("Fetch Categories Error:", error);
+        return [];
+    }
 }
 
 export async function getHeadlines() {
-    const response = await fetch(`${API_BASE_URL}/articles?page=1&limit=10`);
-    if (!response.ok) return [];
-    const data = await response.json();
-    return data.articles || [];
+    try {
+        const response = await fetch(`${API_BASE_URL}/articles?page=1&limit=10`);
+        if (!response.ok) return [];
+        const data = await response.json();
+        if (Array.isArray(data)) return data;
+        return data.articles || [];
+    } catch (error) {
+        console.error("Fetch Headlines Error:", error);
+        return [];
+    }
 }
 
 export async function getAds() {

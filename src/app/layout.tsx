@@ -4,6 +4,7 @@ import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Toaster } from "sonner";
+import { getCategories, getHeadlines } from "@/lib/api";
 
 const inter = Inter({
   variable: "--font-article",
@@ -30,15 +31,21 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:8081"),
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Fetch Navbar data on the server to avoid client-side fetch errors/CORS
+  const [categories, headlines] = await Promise.all([
+    getCategories(),
+    getHeadlines(),
+  ]);
+
   return (
     <html lang="en">
       <body className={`${outfit.variable} ${inter.variable} ${teko.variable} antialiased min-h-screen flex flex-col`}>
-        <Navbar />
+        <Navbar initialCategories={categories} initialHeadlines={headlines} />
         <main className="flex-1">
           {children}
         </main>

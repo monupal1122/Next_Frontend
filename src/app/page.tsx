@@ -71,7 +71,7 @@ export default async function Home() {
           {/* Sidebar (Right Column) */}
           <aside className="lg:col-span-4 space-y-12">
             {/* Trending Sidebar (Already matches Screenshot - Black Header) */}
-            <TrendingSidebar />
+            <TrendingSidebar initialArticles={headlines.slice(0, 5)} />
 
             {/* Sidebar Ads (Matches "Mega Sale" and "Healthcare Clinic" in Screenshot) */}
             <div className="sticky top-32 space-y-10">

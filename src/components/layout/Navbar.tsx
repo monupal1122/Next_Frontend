@@ -1,30 +1,37 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Search, Menu, X, ChevronDown, Rocket, ArrowRight } from "lucide-react";
 import { getCategories, getHeadlines } from "@/lib/api";
 
-export function Navbar() {
+interface NavbarProps {
+    initialCategories?: any[];
+    initialHeadlines?: any[];
+}
+
+export function Navbar({ initialCategories = [], initialHeadlines = [] }: NavbarProps) {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isTickerPaused, setIsTickerPaused] = useState(false);
-    const [categories, setCategories] = useState<any[]>([]);
-    const [headlines, setHeadlines] = useState<any[]>([]);
+    const [categories, setCategories] = useState<any[]>(initialCategories);
+    const [headlines, setHeadlines] = useState<any[]>(initialHeadlines);
     const [openCategoryId, setOpenCategoryId] = useState<string | null>(null);
 
     useEffect(() => {
-        const fetchData = async () => {
-            const [catData, headData] = await Promise.all([
-                getCategories(),
-                getHeadlines(),
-            ]);
-            setCategories(catData);
-            setHeadlines(headData);
-        };
-        fetchData();
-    }, []);
+        // Only fetch if initial data is empty (fallback)
+        if (initialCategories.length === 0 || initialHeadlines.length === 0) {
+            const fetchData = async () => {
+                const [catData, headData] = await Promise.all([
+                    getCategories(),
+                    getHeadlines(),
+                ]);
+                if (catData?.length) setCategories(catData);
+                if (headData?.length) setHeadlines(headData);
+            };
+            fetchData();
+        }
+    }, [initialCategories, initialHeadlines]);
 
     const getArticleLink = (article: any) => {
         const categorySlug = typeof article.category === "object" ? article.category.slug : "uncategorized";
@@ -210,7 +217,7 @@ export function Navbar() {
                             className="block text-xl font-black uppercase tracking-tighter text-zinc-800 p-4 border-b border-zinc-100 hover:text-red-600"
                             onClick={() => setIsMobileMenuOpen(false)}
                         >
-                            Home 
+                            Home
                         </Link>
                         {categories.map((cat) => (
                             <div key={cat._id} className="border-b border-zinc-100">
