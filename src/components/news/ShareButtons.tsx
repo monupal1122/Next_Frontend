@@ -1,9 +1,8 @@
 "use client";
 
-import { Facebook, Twitter, Linkedin, Mail, Copy, MessageCircle, Share2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Facebook, Twitter, Linkedin, Mail, Copy, MessageCircle, Share2, Youtube, Instagram } from "lucide-react";
 import { toast } from "sonner";
-import Image from "next/image";
+import Link from "next/link";
 
 interface ShareButtonsProps {
     title: string;
@@ -11,9 +10,8 @@ interface ShareButtonsProps {
 }
 
 export function ShareButtons({ title, url }: ShareButtonsProps) {
-    const shareText = `${title}\n\nRead more at: ${url}`;
-
     const handleShare = async (platform: string) => {
+        const shareText = `${title}\n\nRead more at: ${url}`;
         const platforms: Record<string, string> = {
             whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`,
             facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
@@ -38,21 +36,21 @@ export function ShareButtons({ title, url }: ShareButtonsProps) {
     };
 
     return (
-        <div className="flex flex-row items-center justify-between w-full h-fit py-1">
-            <div className="flex items-center gap-2 md:gap-3">
+        <div className="flex items-center justify-between w-full py-4 border-y border-zinc-100 mt-8 mb-12">
+            <div className="flex items-center gap-3">
                 {/* Facebook */}
                 <button
                     onClick={() => handleShare("facebook")}
-                    className="w-10 h-10 flex items-center justify-center rounded-full border border-zinc-200 text-blue-600 hover:bg-zinc-100 transition-all shadow-sm"
+                    className="w-10 h-10 flex items-center justify-center rounded-full bg-[#1877F2] text-white hover:opacity-90 transition-opacity"
                     title="Share on Facebook"
                 >
                     <Facebook className="w-5 h-5 fill-current" />
                 </button>
 
-                {/* X (Twitter) */}
+                {/* Twitter / X */}
                 <button
                     onClick={() => handleShare("twitter")}
-                    className="w-10 h-10 flex items-center justify-center rounded-full border border-zinc-200 text-zinc-900 hover:bg-zinc-100 transition-all shadow-sm"
+                    className="w-10 h-10 flex items-center justify-center rounded-full bg-black text-white hover:opacity-90 transition-opacity"
                     title="Share on X"
                 >
                     <Twitter className="w-5 h-5 fill-current" />
@@ -61,45 +59,41 @@ export function ShareButtons({ title, url }: ShareButtonsProps) {
                 {/* LinkedIn */}
                 <button
                     onClick={() => handleShare("linkedin")}
-                    className="w-10 h-10 flex items-center justify-center rounded-full border border-zinc-200 text-blue-700 hover:bg-zinc-100 transition-all shadow-sm"
+                    className="w-10 h-10 flex items-center justify-center rounded-full bg-[#0A66C2] text-white hover:opacity-90 transition-opacity"
                     title="Share on LinkedIn"
                 >
                     <Linkedin className="w-5 h-5 fill-current" />
                 </button>
 
-                {/* Email */}
+                {/* Mail */}
                 <button
                     onClick={() => handleShare("email")}
-                    className="w-10 h-10 flex items-center justify-center rounded-full border border-zinc-200 text-zinc-400 hover:bg-zinc-100 transition-all shadow-sm"
+                    className="w-10 h-10 flex items-center justify-center rounded-full bg-zinc-400 text-white hover:opacity-90 transition-opacity"
                     title="Share via Email"
                 >
                     <Mail className="w-5 h-5" />
                 </button>
 
-                {/* Copy Link */}
+                {/* Copy */}
                 <button
                     onClick={() => handleShare("copy")}
-                    className="w-10 h-10 flex items-center justify-center rounded-full border border-zinc-200 text-zinc-400 hover:bg-zinc-100 transition-all shadow-sm"
+                    className="w-10 h-10 flex items-center justify-center rounded-full bg-zinc-200 text-zinc-600 hover:bg-zinc-300 transition-colors"
                     title="Copy Link"
                 >
                     <Share2 className="w-5 h-5" />
                 </button>
             </div>
 
-            {/* Community Call to Action (Matches Screenshot) */}
-            <div className="flex items-center gap-2 md:gap-3">
-                <span className="font-bold text-zinc-900 text-[10px] md:text-sm whitespace-nowrap hidden sm:inline italic">
-                    Join our community
-                </span>
-                <a
-                    href="https://whatsapp.com/channel/YOUR_CHANNEL_ID"
+            {/* Community Section (Matches Screenshot) */}
+            <div className="flex items-center gap-4">
+                <span className="text-[13px] font-bold text-zinc-900 italic hidden sm:block">Join our community</span>
+                <Link
+                    href="https://whatsapp.com/channel/0029Va9D0pQ545uwJvG6mE1j"
                     target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 flex items-center justify-center bg-green-600 text-white rounded-full transition-transform hover:scale-110 shadow-lg"
-                    title="Join WhatsApp Channel"
+                    className="w-11 h-11 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
                 >
                     <MessageCircle className="w-6 h-6 fill-current" />
-                </a>
+                </Link>
             </div>
         </div>
     );

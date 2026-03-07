@@ -57,3 +57,14 @@ export async function getHeadlines() {
     const data = await response.json();
     return data.articles || [];
 }
+
+export async function getAds() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/ads`, { next: { revalidate: 300 } });
+        if (!response.ok) return [];
+        return response.json();
+    } catch (error) {
+        console.error("Ads Fetch Error:", error);
+        return [];
+    }
+}

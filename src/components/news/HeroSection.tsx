@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { NewsCard } from '@/components/news/NewsCard';
+import { NewsCardSkeleton } from '@/components/news/NewsCardSkeleton';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
@@ -13,6 +14,7 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({ articles, headlines, isLoading }: HeroSectionProps) {
+    // Porting the Embla logic exactly from the user's snippet
     const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, duration: 30 });
     const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -29,6 +31,7 @@ export function HeroSection({ articles, headlines, isLoading }: HeroSectionProps
         onSelect();
         emblaApi.on('select', onSelect);
 
+        // Auto-play logic from the snippet
         let intervalId: NodeJS.Timeout;
         const startAutoplay = () => {
             intervalId = setInterval(() => {
@@ -50,12 +53,12 @@ export function HeroSection({ articles, headlines, isLoading }: HeroSectionProps
 
     if (isLoading) {
         return (
-            <section className="container mx-auto px-4 py-4 md:py-8 h-[560px]">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
-                    <div className="lg:col-span-8 min-h-[360px] md:h-full bg-zinc-200 animate-pulse rounded-xl shadow-sm" />
+            <section className="container mx-auto px-4 py-4 md:py-8">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div className="lg:col-span-8 min-h-[360px] md:h-[500px] bg-zinc-100 animate-pulse rounded-xl" />
                     <div className="lg:col-span-4 flex flex-col gap-4">
-                        {[1, 2, 3].map((i) => (
-                            <div key={i} className="h-40 bg-zinc-100 animate-pulse rounded-xl" />
+                        {Array.from({ length: 3 }).map((_, i) => (
+                            <NewsCardSkeleton key={i} variant="horizontal" />
                         ))}
                     </div>
                 </div>
@@ -65,13 +68,15 @@ export function HeroSection({ articles, headlines, isLoading }: HeroSectionProps
 
     if (!articles?.length) return null;
 
+    // Splitting 5 slider articles + 3 side articles exactly as requested
     const sliderArticles = articles.slice(0, 5);
-    const sideArticles = (headlines && headlines.length > 0 ? headlines : articles).slice(0, 4);
+    const sideArticles = (headlines && headlines.length > 0 ? headlines : articles.slice(5, 8)).slice(0, 3);
 
     return (
-        <section className="container mx-auto px-4 py-4 md:py-8 mb-4">
+        <section className="container mx-auto px-4 py-4 md:py-8 mb-5">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
-                {/* Main Slider Area */}
+
+                {/* Main Slider Area (Fixed at 560px for premium feel) */}
                 <div className="lg:col-span-8 relative group lg:h-[560px]">
                     <div
                         className="overflow-hidden rounded-xl border border-zinc-100 shadow-sm bg-white h-full"
@@ -86,52 +91,63 @@ export function HeroSection({ articles, headlines, isLoading }: HeroSectionProps
                         </div>
                     </div>
 
+                    {/* Slider Controls — always visible on mobile, hover-only on desktop */}
                     <button
                         onClick={scrollPrev}
-                        className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-zinc-900 p-2 md:p-3 rounded-full shadow-lg opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity z-10"
+                        className="absolute left-3 md:left-4 md:top-1/2 top-1/5 -translate-y-1/2 bg-white/90 hover:bg-white text-zinc-900 p-2 md:p-3 rounded-full shadow-lg opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity z-30"
+                        aria-label="Previous slide"
                     >
                         <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
                     </button>
                     <button
                         onClick={scrollNext}
-                        className="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-zinc-900 p-2 md:p-3 rounded-full shadow-lg opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity z-10"
+                        className="absolute right-3 md:right-4 md:top-1/2 top-1/5 -translate-y-1/2 bg-white/90 hover:bg-white text-zinc-900 p-2 md:p-3 rounded-full shadow-lg opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity z-10"
+                        aria-label="Next slide"
                     >
                         <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
                     </button>
 
-                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                    {/* Centered Dots as per snippet design */}
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
                         {sliderArticles.map((_, index) => (
                             <button
                                 key={index}
                                 onClick={() => emblaApi && emblaApi.scrollTo(index)}
-                                className={`h-1.5 rounded-full transition-all ${index === selectedIndex
-                                    ? 'bg-red-600 w-8'
-                                    : 'bg-white/50 w-3 hover:bg-white'
+                                className={`h-2 rounded-full transition-all ${index === selectedIndex
+                                    ? 'bg-red-600 w-6'
+                                    : 'bg-white/70 w-2 hover:bg-white'
                                     }`}
                             />
                         ))}
                     </div>
                 </div>
 
-                {/* Sidebar area: Latest Headlines */}
-                <div className="lg:col-span-4 flex flex-col bg-white border border-zinc-100 shadow-sm rounded-xl overflow-hidden h-full max-h-[560px]">
-                    <div className="bg-zinc-950 p-4">
-                        <h3 className="text-xs font-black uppercase tracking-widest text-white">
-                            Latest News
+                {/* Side Articles (Latest Headlines - Solid Black styling) */}
+                <div className="lg:col-span-4 flex flex-col bg-white border border-zinc-100 shadow-sm rounded-xl overflow-y-hidden max-h-[420px] lg:max-h-none lg:h-[560px]">
+                    <div className="bg-black p-3 md:p-4 flex-shrink-0">
+                        <h3 className="text-sm md:text-base font-black uppercase tracking-widest text-white">
+                            Latest Headlines
                         </h3>
                     </div>
-                    <div className="flex-1 overflow-y-auto no-scrollbar divide-y divide-zinc-50">
+                    <div className="flex-1 overflow-y-auto no-scrollbar divide-y divide-zinc-100">
                         {sideArticles.map((article) => (
-                            <NewsCard key={article._id} article={article} variant="horizontal" />
+                            <NewsCard
+                                key={article._id}
+                                article={article}
+                                variant="horizontal"
+                            />
                         ))}
                     </div>
-                    <Link
-                        href="/feed"
-                        className="p-4 bg-zinc-50 border-t border-zinc-100 text-center text-[10px] font-black uppercase tracking-[0.2em] text-red-600 hover:bg-white transition-colors flex items-center justify-center gap-2"
-                    >
-                        View Comprehensive Feed <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
+                    <div className="p-3 md:p-4 bg-zinc-50 border-t border-zinc-100 text-center flex-shrink-0">
+                        <Link
+                            href="/search"
+                            className="text-xs font-black uppercase tracking-widest text-red-600 hover:text-red-700 transition-colors inline-flex items-center gap-2"
+                        >
+                            View All Stories <ArrowRight className="w-3 h-3" />
+                        </Link>
+                    </div>
                 </div>
+
             </div>
         </section>
     );
