@@ -61,7 +61,7 @@ export default async function ArticlePage({ params }: Props) {
 
     return (
         <div className="min-h-screen bg-[#f8f9fa] font-sans">
-            <main className="container mx-auto px-4 py-6 md:py-8 max-w-7xl">
+            <main className="container mx-auto px-4 py-6 md:py-8 max-w-8xl">
                 {/* Back Link */}
                 <div className="mb-6">
                     <Link href="/" className="inline-flex items-center gap-2 text-zinc-500 hover:text-red-600 transition-all font-bold text-[13px]">
@@ -141,13 +141,14 @@ export default async function ArticlePage({ params }: Props) {
                         {/* RELATED ARTICLES Section */}
                         {relatedArticles && relatedArticles.length > 0 && (
                             <section className="mt-20">
-                                <div className="flex items-center gap-3 mb-10">
-                                    <h2 className="text-2xl font-black uppercase tracking-tighter text-zinc-950 italic underline decoration-red-600 decoration-4 underline-offset-8">
-                                        Related Articles
+                                <div className="flex items-center gap-3 mb-10 pb-3 border-b-2 border-zinc-100 relative">
+                                    <h2 className="text-2xl font-black uppercase tracking-tighter text-zinc-950">
+                                        Related News
                                     </h2>
+                                    <div className="absolute bottom-[-2px] left-0 w-24 h-[3px] bg-red-600" />
                                 </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                                    {relatedArticles.slice(0, 4).map((related: any) => (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {relatedArticles.slice(1, 4).map((related: any) => (
                                         <NewsCard key={related._id} article={related} />
                                     ))}
                                 </div>

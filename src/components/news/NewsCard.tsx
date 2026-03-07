@@ -49,7 +49,7 @@ export function NewsCard({ article, variant = "default" }: NewsCardProps) {
                 </div>
 
                 {/* Content Section (Matches Right Column of Screenshot) */}
-                <div className="w-full md:w-[42%] flex flex-col justify-center p-6 md:p-10 p-8">
+                <div className="w-full md:w-[42%] flex flex-col justify-center p-6 md:p-10 py-8">
                     <div className="flex items-center gap-3 mb-6">
                         <span className="bg-red-600 text-white px-2.5 py-1 text-[9px] font-black uppercase tracking-widest rounded-sm shadow-sm">
                             {typeof article.category === 'object' ? article.category.name : "National"}
@@ -59,7 +59,7 @@ export function NewsCard({ article, variant = "default" }: NewsCardProps) {
                         </span>
                     </div>
 
-                    <h2 className="text-2xl md:text-[38px] font-black text-zinc-950 leading-[1.15] mb-6 tracking-tight group-hover:text-red-600 transition-colors">
+                    <h2 className="text-xl md:text-[28px] font-black text-zinc-800 leading-[1.15] mb-6 tracking-tight group-hover:text-red-600 transition-colors">
                         {article.title}
                     </h2>
 
@@ -82,7 +82,7 @@ export function NewsCard({ article, variant = "default" }: NewsCardProps) {
     if (variant === "horizontal" || variant === "compact") {
         return (
             <Link href={articleLink} className="flex gap-4 p-4 group transition-all duration-300">
-                <div className="relative w-24 h-20 flex-shrink-0 overflow-hidden rounded-lg bg-zinc-100 shadow-sm transition-transform group-hover:scale-95">
+                <div className="relative w-34 h-25 flex-shrink-0 overflow-hidden rounded-lg bg-zinc-100 shadow-sm transition-transform group-hover:scale-95">
                     <Image
                         src={imageSrc}
                         alt={article.title}
@@ -120,7 +120,7 @@ export function NewsCard({ article, variant = "default" }: NewsCardProps) {
 
             <div className="p-5 flex flex-col flex-1">
                 <Link href={articleLink} className="block group/title">
-                    <h3 className="text-lg md:text-xl font-black text-zinc-950 leading-[1.3] mb-3 group-hover:text-red-700 transition-colors line-clamp-2 uppercase tracking-tight">
+                    <h3 className="text-[12px] md:text-[15px] font-black text-zinc-800 leading-[1.3] mb-3 group-hover:text-red-700 transition-colors line-clamp-2 uppercase tracking-tight">
                         {article.title}
                     </h3>
                 </Link>

@@ -5,12 +5,16 @@ import { TrendingSidebar } from "@/components/news/TrendingSidebar";
 import { AdsBanner } from "@/components/news/AdsBanner";
 
 export default async function Home() {
-  const [featuredArticles, headlines] = await Promise.all([
+  const [featuredArticles, allHeadlines] = await Promise.all([
     getFeaturedArticles(),
     getHeadlines(),
   ]);
 
-  // Fetch for exact sections from screenshot
+  // Ensure variety by slicing the one large headline fetch
+  // If featuredArticles exists, use them for slider. Otherwise use headlines 1-5.
+  const sliderData = featuredArticles.length > 0 ? featuredArticles : allHeadlines.slice(0, 5);
+
+  // RESTORED: Fetch for exact sections from screenshot
   const [nationalArticles, punjabArticles, sportsArticles, techArticles, entertainmentArticles, businessArticles] = await Promise.all([
     getArticlesByCategory("national"),
     getArticlesByCategory("punjab"),
@@ -20,13 +24,19 @@ export default async function Home() {
     getArticlesByCategory("business"),
   ]);
 
+  // Use Headlines 6-8 for the Hero Sidebar
+  const heroSideData = allHeadlines.slice(5, 8);
+
+  // Use Headlines 10-15 for the "Trending Now" Sidebar to ensure no repeats
+  const trendingData = allHeadlines.slice(9, 14);
+
   return (
     <div className="bg-[#f8f9fa] min-h-screen">
       {/* 1. TOP HERO (Cinematic Slider) */}
       <div className="bg-white border-b border-zinc-200">
         <HeroSection
-          articles={featuredArticles.length > 0 ? featuredArticles : headlines}
-          headlines={headlines}
+          articles={sliderData}
+          headlines={heroSideData}
           isLoading={false}
         />
       </div>
@@ -70,8 +80,8 @@ export default async function Home() {
 
           {/* Sidebar (Right Column) */}
           <aside className="lg:col-span-4 space-y-12">
-            {/* Trending Sidebar (Already matches Screenshot - Black Header) */}
-            <TrendingSidebar initialArticles={headlines.slice(0, 5)} />
+            {/* Trending Sidebar (Using FRESH articles 10-15 from server) */}
+            <TrendingSidebar initialArticles={trendingData} />
 
             {/* Sidebar Ads (Matches "Mega Sale" and "Healthcare Clinic" in Screenshot) */}
             <div className="sticky top-32 space-y-10">

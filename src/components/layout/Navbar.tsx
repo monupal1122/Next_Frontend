@@ -47,7 +47,7 @@ export function Navbar({ initialCategories = [], initialHeadlines = [] }: Navbar
                 <div className="container mx-auto px-4 flex items-center gap-3 md:gap-8">
                     <div className="flex-shrink-0 flex items-center gap-1.5 px-2 md:px-4 py-1 bg-red-600 text-white text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] italic animate-pulse rounded">
                         <Rocket className="w-3 h-3 md:w-3.5 md:h-3.5 fill-current" />
-                        <span className="hidden sm:inline">Breaking</span> News Intelligence
+                        <span className="hidden sm:inline">Breaking</span> News
                     </div>
 
                     <div className="flex-1 relative overflow-hidden h-6">

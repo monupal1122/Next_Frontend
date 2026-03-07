@@ -60,7 +60,7 @@ export async function getCategories() {
 
 export async function getHeadlines() {
     try {
-        const response = await fetch(`${API_BASE_URL}/articles?page=1&limit=10`);
+        const response = await fetch(`${API_BASE_URL}/articles?page=1&limit=30`);
         if (!response.ok) return [];
         const data = await response.json();
         if (Array.isArray(data)) return data;
