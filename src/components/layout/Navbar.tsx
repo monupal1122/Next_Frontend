@@ -88,7 +88,7 @@ export function Navbar({ initialCategories = [], initialHeadlines = [] }: Navbar
                             <Menu className="w-6 h-6" />
                         </button>
 
-                        <Link href="/" className="flex items-center">
+                        <Link href="/" className="flex items-left gap-2">
                             <img
                                 src="/logo1.webp"
                                 alt="DN logo"
