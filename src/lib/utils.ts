@@ -26,7 +26,7 @@ export function safeFormatDate(dateStr: any, formatStr: string = "MMM d, yyyy") 
  * Convert relative image paths from the API into absolute URLs for social sharing and rendering.
  */
 export function toAbsoluteUrl(url: string | undefined): string {
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://admin.korsimnaturals.com/api";
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://admin.korsimnaturals.com/api";
 
     if (!url) return "https://images.unsplash.com/photo-1504711432869-efd597cdd04b?q=80&w=1000&auto=format&fit=crop";
 

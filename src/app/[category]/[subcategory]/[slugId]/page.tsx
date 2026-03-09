@@ -1,5 +1,5 @@
 import { Metadata, ResolvingMetadata } from "next";
-import { getArticle, getArticlesByCategory, getAds } from "@/lib/api";
+import { getArticle, getArticlesByCategory, getAds, getHeadlines } from "@/lib/api";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -54,9 +54,10 @@ export default async function ArticlePage({ params }: Props) {
     const { category, subcategory, slugId } = await params;
 
     // Fetch all data on the server
-    const [article, allAds] = await Promise.all([
+    const [article, allAds, trendingHeadlines] = await Promise.all([
         getArticle(category, subcategory, slugId),
         getAds(),
+        getHeadlines(),
     ]);
 
     if (!article) notFound();
@@ -147,7 +148,7 @@ export default async function ArticlePage({ params }: Props) {
                         {/* RELATED ARTICLES Section */}
                         {/* MOBILE: Sidebar injected before related articles */}
                         <div className="lg:hidden mt-8 space-y-8">
-                            <TrendingSidebar />
+                            <TrendingSidebar initialArticles={trendingHeadlines} />
                             <AdsBanner position="sidebar" initialAds={allAds} />
                         </div>
 
@@ -170,7 +171,7 @@ export default async function ArticlePage({ params }: Props) {
 
                     <aside className="hidden lg:block lg:col-span-4 h-fit">
                         <div className="sticky top-28 space-y-10">
-                            <TrendingSidebar />
+                            <TrendingSidebar initialArticles={trendingHeadlines} />
                             <AdsBanner position="sidebar" initialAds={allAds} />
                         </div>
                     </aside>
