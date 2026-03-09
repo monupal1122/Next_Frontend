@@ -16,19 +16,29 @@ interface Ad {
 interface AdsBannerProps {
     position: 'sidebar' | 'content' | 'top';
     className?: string;
+    initialAds?: Ad[];
 }
 
-export function AdsBanner({ position, className }: AdsBannerProps) {
-    const [ads, setAds] = useState<Ad[]>([]);
-    const [loading, setLoading] = useState(true);
+export function AdsBanner({ position, className, initialAds = [] }: AdsBannerProps) {
+    const [ads, setAds] = useState<Ad[]>(initialAds.filter(ad => ad.position === position));
+    console.log("ads:",ads);
+    
+    
+    const [loading, setLoading] = useState(initialAds.length === 0);
 
     useEffect(() => {
-        getAds().then((data) => {
-            const filtered = data.filter((ad: Ad) => ad.position === position);
-            setAds(filtered);
+        // Only fetch if initialAds is empty
+        if (initialAds.length === 0) {
+            getAds().then((data) => {
+                const filtered = data.filter((ad: Ad) => ad.position === position);
+                setAds(filtered);
+                setLoading(false);
+            }).catch(() => setLoading(false));
+        } else {
+            setAds(initialAds.filter(ad => ad.position === position));
             setLoading(false);
-        }).catch(() => setLoading(false));
-    }, [position]);
+        }
+    }, [position, initialAds]);
 
     if (loading) return (
         <div className={`bg-zinc-100 animate-pulse rounded-2xl ${position === 'sidebar' ? 'aspect-square' : 'h-32'} ${className}`} />

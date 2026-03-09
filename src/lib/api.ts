@@ -73,9 +73,15 @@ export async function getHeadlines() {
 
 export async function getAds() {
     try {
-        const response = await fetch(`${API_BASE_URL}/ads`, { next: { revalidate: 300 } });
+        const response = await fetch(`${API_BASE_URL}/ads`, {
+            next: { revalidate: 300 },
+            headers: { 'Accept': 'application/json' }
+        });
         if (!response.ok) return [];
-        return response.json();
+        const data = await response.json();
+        const ads = Array.isArray(data) ? data : (data.ads || []);
+        console.log(`Fetched ${ads.length} ads from API`);
+        return ads;
     } catch (error) {
         console.error("Ads Fetch Error:", error);
         return [];

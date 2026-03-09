@@ -41,9 +41,9 @@ export function SearchClient() {
                 </Link>
 
                 <div className="flex items-center justify-between border-b-8 border-zinc-950 pb-6 relative">
-                    <div className="flex flex-col gap-2">
-                        <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-zinc-950 leading-none flex items-center gap-4">
-                            SEARCH: {query || "..."}
+                    <div className="flex flex-col gap-2 min-w-0 flex-1">
+                        <h1 className="text-3xl sm:text-4xl md:text-6xl font-black uppercase tracking-tighter text-zinc-950 leading-none flex flex-wrap items-center gap-x-4 break-words">
+                            SEARCH: <span className="text-red-600 truncate max-w-full">{query || "..."}</span>
                         </h1>
                         <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs mt-2 opacity-60">
                             {isLoading ? "Scanning Global Databases..." : `Detected ${articles.length} matched intelligence points`}

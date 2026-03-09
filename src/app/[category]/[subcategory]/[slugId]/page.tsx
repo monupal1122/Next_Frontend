@@ -1,5 +1,5 @@
 import { Metadata, ResolvingMetadata } from "next";
-import { getArticle, getArticlesByCategory } from "@/lib/api";
+import { getArticle, getArticlesByCategory, getAds } from "@/lib/api";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,6 +7,7 @@ import { ArrowLeft, Clock, Eye, ShieldCheck, Share2, Activity, Calendar } from "
 import { TrendingSidebar } from "@/components/news/TrendingSidebar";
 import { ShareButtons } from "@/components/news/ShareButtons";
 import { NewsCard } from "@/components/news/NewsCard";
+import { AdsBanner } from "@/components/news/AdsBanner";
 import { toAbsoluteUrl, safeFormatDate } from "@/lib/utils";
 
 type Props = {
@@ -51,7 +52,12 @@ export async function generateMetadata(
 
 export default async function ArticlePage({ params }: Props) {
     const { category, subcategory, slugId } = await params;
-    const article = await getArticle(category, subcategory, slugId);
+
+    // Fetch all data on the server
+    const [article, allAds] = await Promise.all([
+        getArticle(category, subcategory, slugId),
+        getAds(),
+    ]);
 
     if (!article) notFound();
 
@@ -61,17 +67,17 @@ export default async function ArticlePage({ params }: Props) {
 
     return (
         <div className="min-h-screen bg-[#f8f9fa] font-sans">
-            <main className="container mx-auto px-4 py-6 md:py-8 max-w-8xl">
+            <main className="container mx-auto px-3 sm:px-4 lg:px-8 py-5 md:py-8 max-w-7xl">
                 {/* Back Link */}
                 <div className="mb-6">
-                    <Link href="/" className="inline-flex items-center gap-2 text-zinc-500 hover:text-red-600 transition-all font-bold text-[13px]">
-                        <ArrowLeft className="w-4 h-4" /> Back to home
+                    <Link href="/" className="inline-flex items-center gap-2 text-zinc-500 hover:text-red-600 transition-all font-bold text-[11px] md:text-[13px]">
+                        <ArrowLeft className="w-3.5 h-3.5 md:w-4 md:h-4" /> Back to home
                     </Link>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
                     <div className="lg:col-span-8">
-                        <article className="bg-white rounded-2xl p-6 md:p-8 lg:p-10 shadow-sm border border-zinc-100">
+                        <article className="bg-white rounded-xl md:rounded-2xl p-4 sm:p-6 md:p-8 lg:p-10 shadow-sm border border-zinc-100">
                             {/* Meta row */}
                             <div className="flex items-center flex-wrap gap-4 mb-8">
                                 <span className="bg-red-600 text-white px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-sm shadow-lg shadow-red-600/10">
@@ -86,19 +92,19 @@ export default async function ArticlePage({ params }: Props) {
                             </div>
 
                             {/* Headline */}
-                            <h1 className="text-3xl md:text-4xl lg:text-[45px] font-black leading-[1.15] mb-8 text-zinc-950 tracking-tight">
+                            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-black leading-[1.15] mb-5 md:mb-8 text-zinc-950 tracking-tight">
                                 {article.title}
                             </h1>
 
                             {/* Summary */}
                             {article.summary && (
-                                <p className="text-lg md:text-xl text-zinc-500 leading-relaxed font-medium mb-10 border-l-4 border-red-600 pl-6 italic">
+                                <p className="text-base md:text-lg lg:text-xl text-zinc-500 leading-relaxed font-medium mb-6 md:mb-10 border-l-4 border-red-600 pl-4 md:pl-6 italic">
                                     {article.summary}
                                 </p>
                             )}
 
                             {/* Main Image */}
-                            <div className="relative aspect-[16/9] w-full mb-8 rounded-2xl overflow-hidden shadow-2xl">
+                            <div className="relative aspect-[16/9] w-full mb-5 md:mb-8 rounded-xl md:rounded-2xl overflow-hidden shadow-xl md:shadow-2xl">
                                 <Image
                                     src={ogImage}
                                     alt={article.title}
@@ -120,12 +126,12 @@ export default async function ArticlePage({ params }: Props) {
 
                             {/* Content Body */}
                             <div
-                                className="prose prose-lg max-w-none text-zinc-800 leading-relaxed font-medium article-content-body-final"
+                                className="prose prose-sm md:prose-base lg:prose-lg max-w-none text-zinc-800 leading-relaxed font-medium article-content-body-final"
                                 dangerouslySetInnerHTML={{ __html: article.content || "" }}
                             />
 
                             {/* Author signature */}
-                            <div className="mt-16 pt-8 border-t border-zinc-100 flex items-center justify-between bg-zinc-50/50 p-6 rounded-xl">
+                            <div className="mt-10 md:mt-16 pt-6 md:pt-8 border-t border-zinc-100 flex items-center justify-between bg-zinc-50/50 p-4 md:p-6 rounded-xl">
                                 <div>
                                     <p className="text-zinc-900 font-bold uppercase text-sm tracking-tight mb-1">
                                         PUBLISHED BY: <span className="text-red-600">{article.author?.name || "Robin"}</span>
@@ -139,6 +145,12 @@ export default async function ArticlePage({ params }: Props) {
                         </article>
 
                         {/* RELATED ARTICLES Section */}
+                        {/* MOBILE: Sidebar injected before related articles */}
+                        <div className="lg:hidden mt-8 space-y-8">
+                            <TrendingSidebar />
+                            <AdsBanner position="sidebar" initialAds={allAds} />
+                        </div>
+
                         {relatedArticles && relatedArticles.length > 0 && (
                             <section className="mt-20">
                                 <div className="flex items-center gap-3 mb-10 pb-3 border-b-2 border-zinc-100 relative">
@@ -156,22 +168,10 @@ export default async function ArticlePage({ params }: Props) {
                         )}
                     </div>
 
-                    <aside className="lg:col-span-4 space-y-12">
-                        <TrendingSidebar />
-
-                        {/* Mega Sale Sidebar Ad */}
-                        <div className="rounded-2xl overflow-hidden shadow-2xl relative group cursor-pointer border border-zinc-100 aspect-[4/5]">
-                            <img
-                                src="https://images.unsplash.com/photo-1620330202142-2989b70b3b42?q=80&w=1000&auto=format&fit=crop"
-                                alt="Mega Sale Advertisement"
-                                className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-[10s]"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-red-600/90 via-red-600/20 to-transparent flex flex-col justify-end p-8 text-white">
-                                <span className="bg-white text-red-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest w-fit mb-4 shadow-lg">Special Offer</span>
-                                <h4 className="text-4xl font-black uppercase italic tracking-tighter leading-none mb-3">Mega Sale</h4>
-                                <p className="text-zinc-100 text-[11px] font-bold uppercase tracking-widest opacity-90">Up to 70% Off Latest Gadgets. Vibe your lifestyle with DNV Exclusive.</p>
-                                <button className="mt-6 w-full py-4 bg-white text-red-600 font-black uppercase tracking-widest text-[11px] hover:bg-zinc-900 hover:text-white transition-all shadow-xl">Shop Collection</button>
-                            </div>
+                    <aside className="hidden lg:block lg:col-span-4 h-fit">
+                        <div className="sticky top-28 space-y-10">
+                            <TrendingSidebar />
+                            <AdsBanner position="sidebar" initialAds={allAds} />
                         </div>
                     </aside>
                 </div>

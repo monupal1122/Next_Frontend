@@ -25,14 +25,14 @@ export function TrendingSidebar({ initialArticles = [] }: TrendingSidebarProps) 
 
     return (
         <aside className="bg-white border border-zinc-100 shadow-sm overflow-hidden rounded-2xl">
-            {/* Header matches Screenshot perfectly */}
-            <div className="bg-zinc-950 text-white p-4.5 flex items-center justify-between border-b border-zinc-800 rounded-t-2xl">
+            {/* Header */}
+            <div className="bg-zinc-950 text-white px-4 py-3.5 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                    <div className="relative">
+                    <div className="relative w-2 h-2">
                         <div className="w-2 h-2 bg-red-600 rounded-full animate-ping absolute inset-0" />
                         <div className="w-2 h-2 bg-red-600 rounded-full relative" />
                     </div>
-                    <h2 className="text-[13px] font-black uppercase tracking-[0.15em] text-white">Trending Now</h2>
+                    <h2 className="text-[12px] md:text-[13px] font-black uppercase tracking-[0.15em] text-white">Trending Now</h2>
                 </div>
                 <div className="flex items-center gap-2 bg-zinc-800/80 px-2 py-1 rounded-md border border-white/5">
                     <span className="text-[9px] font-black text-red-500 animate-pulse uppercase tracking-widest">Live</span>
@@ -40,7 +40,7 @@ export function TrendingSidebar({ initialArticles = [] }: TrendingSidebarProps) 
                 </div>
             </div>
 
-            {/* Content List */}
+            {/* Content */}
             <div className="flex flex-col">
                 {isLoading ? (
                     <div className="p-3 space-y-3">
@@ -64,8 +64,8 @@ export function TrendingSidebar({ initialArticles = [] }: TrendingSidebarProps) 
                 )}
             </div>
 
-            {/* Sidebar Footer Indicator */}
-            <div className="bg-zinc-50/80 p-3 border-t border-zinc-100 flex items-center justify-between">
+            {/* Footer */}
+            <div className="bg-zinc-50/80 px-4 py-3 border-t border-zinc-100 flex items-center justify-between">
                 <span className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-400">Stream Updated</span>
                 <div className="flex gap-1">
                     <div className="w-1 h-1 bg-green-500 rounded-full animate-bounce [animation-delay:-0.3s]" />

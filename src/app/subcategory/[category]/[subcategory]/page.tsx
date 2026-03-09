@@ -1,9 +1,9 @@
-import { Metadata } from "next";
-import { getArticlesBySubcategory } from "@/lib/api";
+import { getArticlesBySubcategory, getAds } from "@/lib/api";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { NewsCard } from "@/components/news/NewsCard";
 import { TrendingSidebar } from "@/components/news/TrendingSidebar";
+import { AdsBanner } from "@/components/news/AdsBanner";
 
 interface Props {
     params: Promise<{ category: string; subcategory: string }>;
@@ -20,7 +20,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function SubcategoryPage({ params }: Props) {
     const { category, subcategory } = await params;
-    const articles = await getArticlesBySubcategory(category, subcategory);
+
+    const [articles, allAds] = await Promise.all([
+        getArticlesBySubcategory(category, subcategory),
+        getAds()
+    ]);
 
     // Capitalize names for display
     const catName = category.charAt(0).toUpperCase() + category.slice(1).replace(/-/g, ' ');
@@ -68,13 +72,8 @@ export default async function SubcategoryPage({ params }: Props) {
 
                     {/* Sidebar */}
                     <aside className="lg:col-span-4 space-y-12 h-fit">
+                        <AdsBanner position="sidebar" initialAds={allAds} />
                         <TrendingSidebar />
-                        {/* Custom Sub-sector sidebar block */}
-                        <div className="bg-red-600 p-8 rounded-none border-b-4 border-zinc-950 shadow-2xl relative overflow-hidden group">
-                            <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/60 mb-4 italic animate-pulse">Critical Observation</h4>
-                            <p className="text-xl font-black uppercase tracking-tighter leading-tight relative z-10 text-white">Help us sustain unfiltered reports for {subName}.</p>
-                            <button className="mt-6 px-6 py-3 bg-white text-zinc-950 text-[10px] font-black uppercase tracking-widest hover:bg-zinc-900 hover:text-white transition-all">Support Now</button>
-                        </div>
                     </aside>
                 </div>
             </div>
