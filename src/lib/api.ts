@@ -73,10 +73,12 @@ export async function getHeadlines() {
 
 export async function getAds() {
     try {
-        const response = await fetch(`${API_BASE_URL}/ads`, {
+        const response = await fetch(`${API_BASE_URL}/ads/getall`, {
             next: { revalidate: 300 },
             headers: { 'Accept': 'application/json' }
         });
+
+
         if (!response.ok) return [];
         const data = await response.json();
         const ads = Array.isArray(data) ? data : (data.ads || []);

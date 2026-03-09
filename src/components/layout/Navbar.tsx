@@ -97,8 +97,8 @@ export function Navbar({ initialCategories = [], initialHeadlines = [] }: Navbar
                         </Link>
                     </div>
 
-                    <div className="ml-auto flex items-center h-full overflow-hidden">
-                        <nav className="hidden lg:flex items-center h-full overflow-x-auto no-scrollbar">
+                    <div className="flex-1 flex items-center justify-end h-full overflow-hidden ml-4">
+                        <nav className="hidden lg:flex items-center h-full overflow-x-auto no-scrollbar min-w-0">
                             <Link
                                 href="/"
                                 className="px-5 h-full flex items-center text-[17px] font-bold text-zinc-900 border-r border-zinc-100 hover:text-red-600 hover:bg-zinc-50 transition-all uppercase tracking-tighter"
@@ -108,9 +108,9 @@ export function Navbar({ initialCategories = [], initialHeadlines = [] }: Navbar
 
                             {categories.slice(0, 7).map((cat) => (
                                 <div key={cat._id} className="group relative h-full">
-                                    <button className="px-5 h-full flex items-center gap-1 text-[17px] font-bold text-zinc-900 border-r border-zinc-100 hover:text-red-600 hover:bg-zinc-50 transition-all uppercase tracking-tighter outline-none cursor-pointer">
+                                    <button className="px-5 h-full flex items-center gap-1 text-[17px] font-bold text-zinc-900 border-r border-zinc-100 hover:text-red-600 hover:bg-zinc-50 transition-all uppercase tracking-tighter outline-none cursor-pointer whitespace-nowrap">
                                         {cat.name}
-                                        <ChevronDown className="w-3 h-3 transition-transform group-hover:rotate-180" />
+                                        <ChevronDown className="w-3 h-3 flex-shrink-0 transition-transform group-hover:rotate-180" />
                                     </button>
                                     <div className="absolute top-full left-0 bg-white border-t-4 border-zinc-950 p-6 w-64 shadow-2xl opacity-0 invisible translate-y-3 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300 z-50">
                                         <Link
@@ -135,7 +135,7 @@ export function Navbar({ initialCategories = [], initialHeadlines = [] }: Navbar
                             ))}
                         </nav>
 
-                        <div className="flex items-center pl-4 border-l border-zinc-100 h-full ml-2">
+                        <div className="flex items-center pl-4 border-l border-zinc-100 h-full ml-2 flex-shrink-0">
                             <form
                                 onSubmit={(e) => {
                                     e.preventDefault();

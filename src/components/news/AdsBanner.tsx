@@ -8,60 +8,51 @@ import { toAbsoluteUrl } from "@/lib/utils";
 interface Ad {
     _id: string;
     title: string;
-    image: string;
-    link: string;
-    position: string; // 'sidebar', 'content', 'top'
+    imageUrl: string;
+    redirectUrl: string;
+    placement: string; // 'sidebar', 'content', 'top', etc.
 }
 
 interface AdsBannerProps {
-    position: 'sidebar' | 'content' | 'top';
+    position: 'sidebar' | 'content' | 'top' | 'hero' | 'header'; // Adjusted to match schema common values
     className?: string;
     initialAds?: Ad[];
 }
 
 export function AdsBanner({ position, className, initialAds = [] }: AdsBannerProps) {
-    const [ads, setAds] = useState<Ad[]>(initialAds.filter(ad => ad.position === position));
-    console.log("ads:",ads);
-    
-    
+    // Map Frontend position to Backend placement if different
+    const placementMap: Record<string, string> = {
+        'sidebar': 'sidebar',
+        'content': 'inline', // 'inline' or 'rectangle' in schema
+        'top': 'header'
+    };
+
+    const targetPlacement = placementMap[position] || position;
+
+    const [ads, setAds] = useState<Ad[]>(initialAds.filter(ad => ad.placement === targetPlacement));
+
     const [loading, setLoading] = useState(initialAds.length === 0);
 
     useEffect(() => {
         // Only fetch if initialAds is empty
         if (initialAds.length === 0) {
             getAds().then((data) => {
-                const filtered = data.filter((ad: Ad) => ad.position === position);
+                const filtered = data.filter((ad: Ad) => ad.placement === targetPlacement);
                 setAds(filtered);
                 setLoading(false);
             }).catch(() => setLoading(false));
         } else {
-            setAds(initialAds.filter(ad => ad.position === position));
+            setAds(initialAds.filter(ad => ad.placement === targetPlacement));
             setLoading(false);
         }
-    }, [position, initialAds]);
+    }, [targetPlacement, initialAds]);
 
     if (loading) return (
         <div className={`bg-zinc-100 animate-pulse rounded-2xl ${position === 'sidebar' ? 'aspect-square' : 'h-32'} ${className}`} />
     );
 
     if (ads.length === 0) {
-        // Fallback Mock Ad if no real ads match the position (matches your screenshot style)
-        return (
-            <div className={`relative overflow-hidden rounded-2xl shadow-xl group cursor-pointer border border-zinc-100 ${position === 'sidebar' ? 'aspect-square' : 'h-32'} ${className}`}>
-                <img
-                    src={position === 'sidebar'
-                        ? "https://images.unsplash.com/photo-1616348436168-de43ad0db179?q=80&w=1000&auto=format&fit=crop"
-                        : "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1000&auto=format&fit=crop"}
-                    alt="Advertisement"
-                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-1000"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-red-600/90 via-red-600/20 to-transparent flex flex-col justify-end p-6 text-white">
-                    <span className="bg-white text-red-600 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest w-fit mb-2">Sponsored</span>
-                    <h4 className="text-xl font-black uppercase italic tracking-tighter leading-none mb-1">Mega Sale</h4>
-                    <p className="text-[10px] font-bold opacity-80">Up to 70% Off Latest Gadgets.</p>
-                </div>
-            </div>
-        );
+        return null; // Remove dummy ads
     }
 
     // Show the latest ad for this position
@@ -69,13 +60,13 @@ export function AdsBanner({ position, className, initialAds = [] }: AdsBannerPro
 
     return (
         <a
-            href={activeAd.link}
+            href={activeAd.redirectUrl}
             target="_blank"
             rel="noopener noreferrer"
             className={`relative block overflow-hidden rounded-2xl shadow-xl group border border-zinc-100 ${position === 'sidebar' ? 'aspect-square' : 'h-32'} ${className}`}
         >
             <Image
-                src={toAbsoluteUrl(activeAd.image)}
+                src={toAbsoluteUrl(activeAd.imageUrl)}
                 alt={activeAd.title}
                 fill
                 className="object-cover transform group-hover:scale-105 transition-transform duration-[10s]"

@@ -93,19 +93,6 @@ export default async function Home() {
               {/* Sidebar Ads */}
               <AdsBanner position="sidebar" initialAds={allAds} />
 
-              {/* Secondary Mock Ad */}
-              <div className="rounded-2xl overflow-hidden shadow-2xl relative aspect-[4/5] group border border-zinc-100">
-                <img
-                  src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=1000&auto=format&fit=crop"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[15s]"
-                  alt="Dental Clinic Ad"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-blue-900/90 via-blue-900/10 to-transparent flex flex-col justify-end p-6 lg:p-8 text-white">
-                  <span className="bg-white text-blue-900 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest w-fit mb-3">Official Sponsor</span>
-                  <h4 className="text-2xl lg:text-3xl font-black uppercase italic tracking-tighter leading-none mb-2 underline decoration-blue-500 decoration-4 underline-offset-4">Premium Dental Care</h4>
-                  <p className="text-xs font-bold opacity-80 uppercase tracking-widest leading-relaxed">Book a consultation with DNV Plus members only.</p>
-                </div>
-              </div>
             </div>
           </aside>
         </div>
