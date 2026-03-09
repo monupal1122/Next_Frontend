@@ -97,8 +97,8 @@ export function Navbar({ initialCategories = [], initialHeadlines = [] }: Navbar
                         </Link>
                     </div>
 
-                    <div className="flex-1 flex items-center justify-end h-full overflow-hidden ml-4">
-                        <nav className="hidden lg:flex items-center h-full overflow-x-auto no-scrollbar min-w-0">
+                    <div className="flex-1 flex items-center justify-end h-full ml-4">
+                        <nav className="hidden lg:flex items-center h-full min-w-0">
                             <Link
                                 href="/"
                                 className="px-5 h-full flex items-center text-[17px] font-bold text-zinc-900 border-r border-zinc-100 hover:text-red-600 hover:bg-zinc-50 transition-all uppercase tracking-tighter"

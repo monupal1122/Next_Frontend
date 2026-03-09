@@ -78,8 +78,22 @@ export async function getAds() {
             headers: { 'Accept': 'application/json' }
         });
 
+        // Check if response is OK
+        if (!response.ok) {
+            console.error(`Ads Fetch Error: Server returned status ${response.status}`);
+            return [];
+        }
 
-        if (!response.ok) return [];
+        // Check content-type to ensure it's JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            // Response is not JSON, might be HTML error page
+            const text = await response.text();
+            console.error(`Ads Fetch Error: Expected JSON but got content-type: ${contentType}`);
+            console.error(`Response preview: ${text.substring(0, 200)}`);
+            return [];
+        }
+
         const data = await response.json();
         const ads = Array.isArray(data) ? data : (data.ads || []);
         console.log(`Fetched ${ads.length} ads from API`);
