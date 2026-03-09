@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { getArticlesByCategory, getAds } from "@/lib/api";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -10,7 +11,7 @@ interface Props {
     params: Promise<{ slug: string }>;
 }
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params;
     const displayName = slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' ');
     return {

@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { getArticlesBySubcategory, getAds } from "@/lib/api";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
