@@ -29,6 +29,10 @@ export const metadata: Metadata = {
   },
   description: "Stay ahead with the latest news, in-depth analysis, and breaking stories from around the world.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:8081"),
+  icons: {
+    icon: "/logo1.webp",
+    apple: "/logo1.webp",
+  },
 };
 
 export default async function RootLayout({
