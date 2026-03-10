@@ -79,7 +79,7 @@ export function Navbar({ initialCategories = [], initialHeadlines = [] }: Navbar
 
             {/* 2. Main Nav Bar */}
             <div className="bg-white/95 backdrop-blur-md relative border-t border-zinc-100">
-                <div className="container mx-auto px-4 lg:px-8 flex items-center h-20 lg:h-24">
+                <div className="container mx-auto px-4 lg:px-2 flex items-center h-20 lg:h-24">
                     <div className="flex items-center gap-4">
                         <button
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
