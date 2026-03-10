@@ -103,3 +103,29 @@ export async function getAds() {
         return [];
     }
 }
+
+export async function getAuthorInfo(id: string) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/authors/${id}`, {
+            next: { revalidate: 300 } // Cache author info for 5 mins
+        });
+        if (!response.ok) return null;
+        return response.json();
+    } catch (error) {
+        console.error("Fetch Author Info Error:", error);
+        return null;
+    }
+}
+
+export async function getAuthorArticles(id: string) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/articles/author/${id}`, {
+            next: { revalidate: 60 } // Cache articles for 1 minute like normal articles
+        });
+        if (!response.ok) return [];
+        return response.json();
+    } catch (error) {
+        console.error("Fetch Author Articles Error:", error);
+        return [];
+    }
+}

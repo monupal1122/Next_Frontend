@@ -92,7 +92,7 @@ export function Navbar({ initialCategories = [], initialHeadlines = [] }: Navbar
                             <img
                                 src="/logo1.webp"
                                 alt="DN logo"
-                                className="h-12 lg:h-18 w-auto max-w-[150px] lg:max-w-none object-contain items-start"
+                                className="h-12 lg:h-18 w-auto max-w-[150px] lg:max-w-none object-containz"
                             />
                         </Link>
                     </div>
