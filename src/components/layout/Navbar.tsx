@@ -43,8 +43,8 @@ export function Navbar({ initialCategories = [], initialHeadlines = [] }: Navbar
     return (
         <header className="z-50 bg-white sticky top-0 border-b-4 border-zinc-950 shadow-xl">
             {/* 1. Breaking News Ticker */}
-            <div className="bg-primary text-white border-y border-primary/20 py-1.5 overflow-hidden">
-                <div className="container mx-auto px-4 flex items-center gap-3 md:gap-8">
+            <div className="bg-primary text-primary-foreground border-y border-primary/20 py-1.5 overflow-hidden">
+                <div className="px-4 flex items-center gap-3 md:gap-8">
                     <div className="flex-shrink-0 flex items-center gap-1.5 px-2 md:px-4 py-1 bg-red-600 text-white text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] italic animate-pulse rounded">
                         <Rocket className="w-3 h-3 md:w-3.5 md:h-3.5 fill-current" />
                         <span className="hidden sm:inline">Breaking</span> News
