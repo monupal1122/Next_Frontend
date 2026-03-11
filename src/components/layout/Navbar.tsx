@@ -88,17 +88,17 @@ export function Navbar({ initialCategories = [], initialHeadlines = [] }: Navbar
                             <Menu className="w-6 h-6" />
                         </button>
 
-                        <Link href="/" className="flex items-start gap-2">
+                        <Link href="/" className="flex items-center">
                             <img
                                 src="/logo1.webp"
                                 alt="DN logo"
-                                className="h-12 lg:h-18 w-auto max-w-[150px] lg:max-w-none object-contain lg:items-start"
+                                className="h-12 lg:h-20 w-auto max-w-[150px] lg:max-w-none object-contain lg:ml-12"
                             />
                         </Link>
                     </div>
 
                     <div className="flex-1 flex items-center justify-end h-full ml-4">
-                        <nav className="hidden lg:flex items-center h-full min-w-0">
+                        <nav className="hidden lg:flex items-center h-full">
                             <Link
                                 href="/"
                                 className="px-5 h-full flex items-center text-[17px] font-bold text-zinc-900 border-r border-zinc-100 hover:text-red-600 hover:bg-zinc-50 transition-all uppercase tracking-tighter"
@@ -115,7 +115,7 @@ export function Navbar({ initialCategories = [], initialHeadlines = [] }: Navbar
                                     <div className="absolute top-full left-0 bg-white border-t-4 border-zinc-950 p-6 w-64 shadow-2xl opacity-0 invisible translate-y-3 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300 z-50">
                                         <Link
                                             href={`/category/${cat.slug}`}
-                                            className="font-black text-red-600 mb-4 block p-2 hover:bg-zinc-50 border-b border-zinc-100 uppercase tracking-widest text-xs"
+                                            className="font-black text-red-600 mb-4 block p-2 hover:bg-red-300 border-b border-zinc-100 uppercase tracking-widest text-xs"
                                         >
                                             See All Intelligence Report
                                         </Link>
@@ -135,7 +135,7 @@ export function Navbar({ initialCategories = [], initialHeadlines = [] }: Navbar
                             ))}
                         </nav>
 
-                        <div className="flex items-center pl-4 border-l border-zinc-100 h-full ml-2 flex-shrink-0">
+                        <div className="flex items-center pl-4 border-l border-zinc-100 h-full ml-2">
                             <form
                                 onSubmit={(e) => {
                                     e.preventDefault();
@@ -146,13 +146,13 @@ export function Navbar({ initialCategories = [], initialHeadlines = [] }: Navbar
                                 className="hidden sm:flex items-center relative group min-w-[150px]"
                             >
                                 <Search className="absolute left-3 w-4 h-4 text-zinc-400 group-focus-within:text-red-600 transition-colors" />
-                                <input
-                                    type="text"
-                                    placeholder="Intelligence Search..."
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="pl-9 pr-3 py-2 bg-transparent text-[11px] font-bold uppercase tracking-widest border-b border-transparent focus:border-red-600 focus:outline-none w-full transition-all duration-300"
-                                />
+                                                <input
+                                                  type="text"
+                                                  placeholder="Search..."
+                                                  value={searchQuery}
+                                                  onChange={(e) => setSearchQuery(e.target.value)}
+                                                  className="pl-9 pr-3 py-2 bg-transparent text-xs font-bold uppercase tracking-widest border-b border-transparent focus:border-red-600 focus:outline-none w-32 focus:w-52 transition-all duration-300"
+                                                />
                             </form>
                             <button
                                 className="p-2 hover:text-red-600 transition-colors sm:hidden"
