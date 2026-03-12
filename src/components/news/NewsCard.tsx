@@ -125,8 +125,10 @@ export function NewsCard({ article, variant = "default" }: NewsCardProps) {
                             {totalview} views
                         </span>
                     </div>
-                    <div className="mt-auto flex items-center gap-3 text-xs lg:text-sm font-black uppercase tracking-[0.2em] text-zinc-950 group-hover:text-red-600 transition-all border-b-2 border-zinc-950 group-hover:border-red-600 pb-1 w-fit">
-                        Explore Full Report <ArrowRight className="w-4 h-4" />
+                    <div className="mt-auto pt-6 flex">
+                        <span className="bg-red-600 text-white px-6 py-3 text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] flex items-center gap-3 group-hover:bg-zinc-950 transition-colors shadow-xl shadow-red-600/20 group-hover:shadow-zinc-950/20 rounded-sm">
+                            Explore Full Report <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </span>
                     </div>
                 </div>
             </Link>

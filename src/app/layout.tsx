@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Outfit, Teko } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -48,6 +49,23 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
+      <head>
+        {/*
+          Google AdSense script — loaded once globally for every page.
+          strategy="afterInteractive" defers loading until after hydration
+          so it never blocks the page render or LCP.
+
+          Replace 'ca-pub-XXXXXXXXXXXXXXXX' with your real Publisher ID:
+            AdSense dashboard → Account → Account info → Publisher ID
+          Or set NEXT_PUBLIC_ADSENSE_PUBLISHER_ID in .env.local
+        */}
+        <Script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID || "ca-pub-XXXXXXXXXXXXXXXX"}`}
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+      </head>
       <body className={`${outfit.variable} ${inter.variable} ${teko.variable} antialiased min-h-screen flex flex-col`}>
         <Navbar initialCategories={categories} initialHeadlines={headlines} />
         <main className="flex-1">

@@ -161,9 +161,9 @@ export default async function ArticlePage({ params }: Props) {
               {/* Tags */}
               {article.tags && Array.isArray(article.tags) && article.tags.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-8 mb-12">
-                  {article.tags.map((tag: string) => (
+                  {article.tags.map((tag: string, idx: number) => (
                     <Link
-                      key={tag}
+                      key={`${tag}-${idx}`}
                       href={`/tags/${tag}`}
                       className="px-3 py-1 bg-muted hover:bg-primary hover:text-white rounded-full text-sm transition-colors"
                     >
